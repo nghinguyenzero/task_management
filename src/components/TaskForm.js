@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class TaskForm extends Component {
+export default class TaskForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -9,6 +9,7 @@ class TaskForm extends Component {
             status: false,
         }
     }
+
     componentWillMount() { // chỉ dc gọi duy nhất 1 lần khi component dc gắn vào
         if(this.props.task) {
             this.setState({
@@ -18,6 +19,7 @@ class TaskForm extends Component {
             })
         }
     }
+    
     componentWillReceiveProps(nextProps) {// một phương thức static sẽ chạy khi component nhận được props và đã được khởi tạo
         //is required if you want to update the state values with new props values
         if(nextProps && nextProps.task) {
@@ -34,9 +36,11 @@ class TaskForm extends Component {
             });
         }
     }
+
     onCloseForm = () => {
         this.props.onCloseForm();
     }
+
     onChange = (event) => {
         var target = event.target;
         var name = target.name;
@@ -47,8 +51,8 @@ class TaskForm extends Component {
         this.setState({
             [name]: value
         });
-
     }
+
     onSubmit = (event) => {
         event.preventDefault(); //If this method is called, the default action of the event will not be triggered.
         this.props.onSubmit(this.state);
@@ -56,12 +60,14 @@ class TaskForm extends Component {
         this.onClear();
         this.onCloseForm();
     }
+
     onClear=()=>{
         this.setState=({
             name:'',
             status:false
         })
     }
+
     render() {
         var  {id} = this.state;
         return (
@@ -73,7 +79,6 @@ class TaskForm extends Component {
                             onClick={this.onCloseForm}
                         ></span>
                     </h3>
-
                 </div>
                 <div className="panel-body">
                     <form onSubmit={this.onSubmit}>
@@ -93,7 +98,6 @@ class TaskForm extends Component {
                             >
                                 <option value={true}>Active</option>
                                 <option value={false}>Hide</option>
-
                             </select><br />
                             <div className="form-center">
                                 <button type="submit" className="btn btn-warning">
@@ -110,7 +114,5 @@ class TaskForm extends Component {
                 </div>
             </div>
         );
-
     }
 }
-export default TaskForm;

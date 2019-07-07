@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class Sort extends Component {
+export default class Sort extends Component {
     render() {
         return (
             <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6">
@@ -27,7 +27,6 @@ class Sort extends Component {
                             </a>
                         </li>
                         <li role="separator" className="divider">
-
                         </li>
                         <li>
                             <a role="button">
@@ -40,11 +39,8 @@ class Sort extends Component {
                                 </a>
                         </li>
                     </ul>
-
                 </div>
             </div>
         );
-
     }
 }
-export default Sort;

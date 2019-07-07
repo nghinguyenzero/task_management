@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
-import Search from'./../components/Search';
-import Sort from'./../components/Sort';
+import Search from './../components/Search';
+import Sort from './../components/Sort';
 
 
-class Control extends Component {
+export default class Control extends Component {
     render() {
         return (
             <div className="row mt-15">
                 {/* Search */}
-                <Search></Search>
+                <Search
+                    onSearch={this.props.onSearch}
+                ></Search>
                 {/* Sort */}
                 <Sort></Sort>
             </div>
         );
     }
 }
-export default Control;

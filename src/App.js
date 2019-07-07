@@ -4,7 +4,7 @@ import TaskForm from './components/TaskForm';
 import Control from './components/Control';
 import TaskList from './components/TaskList';
 
-class App extends Component {
+export default class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -14,25 +14,29 @@ class App extends Component {
             filter: {
                 name: '',
                 status: -1
-            }
+            },
+            keyword: ''
         };
-
     }
-    componentWillMount() { //life circle nó sẽ dc gọi khi component dc gắn vào, và chỉ dc gọi duy nhất 1 lần
+    //  componentWillMount : life circle nó sẽ dc gọi khi component dc gắn vào, và chỉ dc gọi duy nhất 1 lần
+    componentWillMount() {
         if (localStorage && localStorage.getItem('tasks')) {
             var tasks = JSON.parse(localStorage.getItem('tasks'));
             this.setState({
                 tasks: tasks
             })
         }
-
     }
+
     onGenerateData = () => {
         var tasks = [
-            { id: this.generateId(), name: 'Code', status: true }, { id: this.generateId(), name: 'running', status: false }, { id: this.generateId(), name: 'music', status: true }
+            { id: this.generateId(), name: 'Code', status: true },
+            { id: this.generateId(), name: 'running', status: false },
+            { id: this.generateId(), name: 'music', status: true }
         ]
         localStorage.setItem('tasks', JSON.stringify(tasks));
     }
+
     s4 = () => { return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1); }
     generateId = () => { return this.s4() + this.s4() + '-' + this.s4() + this.s4() + '-' + this.s4() + this.s4(); }
 
@@ -48,7 +52,6 @@ class App extends Component {
                 taskEditing: null
             });
         }
-
     }
 
     onCloseForm = () => {
@@ -106,6 +109,7 @@ class App extends Component {
         });
         this.onShowForm();
     }
+
     onFilter = (filterName, filterStatus) => {
         filterStatus = parseInt(filterStatus, 10);
         this.setState({
@@ -116,7 +120,6 @@ class App extends Component {
         });
     }
 
-
     findIndex = (id) => {
         var { tasks } = this.state;
         var result = -1;
@@ -124,13 +127,18 @@ class App extends Component {
             if (task.id === id) {
                 result = index;
             }
-
         });
         return result;
     }
+
+    onSearch = (keyword) => {
+        this.setState({
+            keyword: keyword
+        });
+    }
+
     render() {
-        var { tasks, isDisplayForm, taskEditing, filter } = this.state; // var tasks = this.state.tasks
-        console.log(filter);
+        var { tasks, isDisplayForm, taskEditing, filter, keyword } = this.state;
         if (filter) {
             if (filter.name) {
                 tasks = tasks.filter((task) => {
@@ -145,12 +153,19 @@ class App extends Component {
                 }
             })
         }
+        if (keyword) {
+            tasks = tasks.filter((task) => {
+                return task.name.toLowerCase().indexOf(keyword) !== -1;
+            })
+        }
         var elmTaskForm = isDisplayForm ?
             <TaskForm
                 onSubmit={this.onSubmit}
                 onCloseForm={this.onCloseForm}
                 task={taskEditing}
-            /> : '';
+            />
+            : '';
+
         return (
             <div className="container">
                 <div className="text-center">
@@ -172,7 +187,9 @@ class App extends Component {
                         > Generate data
                         </button>
                         {/* Search- Sort */}
-                        <Control></Control>
+                        <Control
+                            onSearch={this.onSearch}
+                        ></Control>
                         {/* TaskList */}
                         <TaskList tasks={tasks}
                             onUpdateStatus={this.onUpdateStatus}
@@ -182,10 +199,8 @@ class App extends Component {
                         ></TaskList>
                     </div>
                 </div>
-
             </div>
         );
     }
 }
 
-export default App;

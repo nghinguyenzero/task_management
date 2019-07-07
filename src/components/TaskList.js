@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import TaskItem from './../components/TaskItem';
 
-class TaskList extends Component {
+export default class TaskList extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -9,6 +9,7 @@ class TaskList extends Component {
             filterStatus: -1 //all: -1, active: 1, Hide: 0
         };
     }
+
     onChange = (event) => {
         var target = event.target;
         var name = target.name;
@@ -21,10 +22,10 @@ class TaskList extends Component {
             [name]: value
         })
     }
+
     render() {
         var { tasks } = this.props;
         var { filterName, filterStatus } = this.state;
-        console.log(tasks);
         var elmTasks = tasks.map((task, index) => {
             return <TaskItem
                 key={task.id}
@@ -48,7 +49,6 @@ class TaskList extends Component {
                 <tbody>
                     <tr>
                         <td>
-
                         </td>
                         <td>
                             <input type="text"
@@ -64,7 +64,6 @@ class TaskList extends Component {
                                 value={filterStatus}
                                 onChange={this.onChange}
                             >
-
                                 <option value={-1}>All</option>
                                 <option value={0}>Hide</option>
                                 <option value={1}>Active</option>
@@ -79,4 +78,3 @@ class TaskList extends Component {
     }
 }
 
-export default TaskList;
