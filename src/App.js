@@ -3,6 +3,7 @@ import './App.css';
 import TaskForm from './components/TaskForm';
 import Control from './components/Control';
 import TaskList from './components/TaskList';
+import {findIndex, filter} from 'lodash';
 
 export default class App extends Component {
     constructor(props) {
@@ -11,30 +12,23 @@ export default class App extends Component {
             tasks: [],
             isDisplayForm: false,
             taskEditing: null,
-            filter: {
+            filterTask: {
                 name: '',
                 status: -1
             },
-            keyword: ''
+            keyword: '',
+            sortBy: 'name',
+            sortValue: 1
         };
     }
-    //  componentWillMount : life circle nó sẽ dc gọi khi component dc gắn vào, và chỉ dc gọi duy nhất 1 lần
+    //  componentWillMount : lifecycle method, and then will call the render() method to get the rendered element.
     componentWillMount() {
         if (localStorage && localStorage.getItem('tasks')) {
             var tasks = JSON.parse(localStorage.getItem('tasks'));
             this.setState({
                 tasks: tasks
-            })
+            });
         }
-    }
-
-    onGenerateData = () => {
-        var tasks = [
-            { id: this.generateId(), name: 'Code', status: true },
-            { id: this.generateId(), name: 'running', status: false },
-            { id: this.generateId(), name: 'music', status: true }
-        ]
-        localStorage.setItem('tasks', JSON.stringify(tasks));
     }
 
     s4 = () => { return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1); }
@@ -73,7 +67,9 @@ export default class App extends Component {
             tasks.push(data);
 
         } else {//edit
-            var index = this.findIndex(data.id);
+            var index = findIndex(tasks, (task) => {
+                return task.id === data.id;
+            });
             tasks[index] = data;
         }
         this.setState({ tasks: tasks, taskEditing: null });
@@ -81,7 +77,9 @@ export default class App extends Component {
     }
     onUpdateStatus = (id) => {
         var { tasks } = this.state;
-        var index = this.findIndex(id);
+        var index = findIndex(tasks, (task) => {
+            return task.id === id;
+        });
         if (index !== -1) {
             tasks[index].status = !tasks[index].status;
             this.setState({ tasks: tasks });
@@ -91,7 +89,9 @@ export default class App extends Component {
 
     onDelete = (id) => {
         var { tasks } = this.state;
-        var index = this.findIndex(id);
+        var index = findIndex(tasks, (task) => {
+            return task.id === id;
+        });
         if (index !== -1) {
             tasks.splice(index, 1);
             this.setState({ tasks: tasks });
@@ -102,7 +102,9 @@ export default class App extends Component {
 
     onUpdate = (id) => {
         var { tasks } = this.state;
-        var index = this.findIndex(id);
+        var index = findIndex(tasks, (task) => {
+            return task.id === id;
+        });
         var taskEditing = tasks[index];
         this.setState({
             taskEditing: taskEditing
@@ -113,23 +115,23 @@ export default class App extends Component {
     onFilter = (filterName, filterStatus) => {
         filterStatus = parseInt(filterStatus, 10);
         this.setState({
-            filter: {
+            filterTask: {
                 name: filterName.toLowerCase(),
                 status: filterStatus
             }
         });
     }
 
-    findIndex = (id) => {
-        var { tasks } = this.state;
-        var result = -1;
-        tasks.forEach((task, index) => {
-            if (task.id === id) {
-                result = index;
-            }
-        });
-        return result;
-    }
+    // findIndex = (id) => {
+    //     var { tasks } = this.state;
+    //     var result = -1;
+    //     tasks.forEach((task, index) => {
+    //         if (task.id === id) {
+    //             result = index;
+    //         }
+    //     });
+    //     return result;
+    // }
 
     onSearch = (keyword) => {
         this.setState({
@@ -137,27 +139,54 @@ export default class App extends Component {
         });
     }
 
+    onSort = (sortBy, sortValue) => {
+        this.setState({
+            sortBy: sortBy,
+            sortValue: sortValue
+        });
+        console.log(this.state.sortBy, this.state.sortValue); // chỗ này kết quả có vấn đề
+    }
+
     render() {
-        var { tasks, isDisplayForm, taskEditing, filter, keyword } = this.state;
-        if (filter) {
-            if (filter.name) {
-                tasks = tasks.filter((task) => {
-                    return task.name.toLowerCase().indexOf(filter.name) !== -1;
-                })
+        var { tasks, isDisplayForm, taskEditing, filterTask, keyword, sortBy, sortValue } = this.state;
+        if (filterTask) { 
+            if (filterTask.name) {
+                tasks = filter(tasks, (task) => {
+                    return task.name.toLowerCase().indexOf(filterTask.name) !== -1;
+                });
             }
-            tasks = tasks.filter((task) => {
-                if (filter.status === -1) {
+
+            tasks = filter(tasks, (task) => {
+                if (filterTask.status === -1) {
                     return task;
                 } else {
-                    return task.status === (filter.status === 1 ? true : false)
+                    return task.status === (filterTask.status === 1 ? true : false);
                 }
-            })
+            });
         }
+
         if (keyword) {
             tasks = tasks.filter((task) => {
-                return task.name.toLowerCase().indexOf(keyword) !== -1;
+                return task.name.toLowerCase().indexOf(keyword.toLowerCase()) !== -1;
             })
         }
+
+        console.log(sortBy, '-', sortValue);
+
+        if (sortBy === "name") {
+            tasks.sort((a, b) => {
+                if (a.name > b.name) return sortValue;
+                else if (a.name < b.name) return -sortValue;
+                else return 0;
+            });
+        } else {
+            tasks.sort((a, b) => {
+                if (a.status > b.status) return -sortValue;
+                else if (a.status < b.status) return sortValue;
+                else return 0;
+            });
+        }
+
         var elmTaskForm = isDisplayForm ?
             <TaskForm
                 onSubmit={this.onSubmit}
@@ -182,13 +211,12 @@ export default class App extends Component {
                         >
                             <span className="fa fa-plus mr-5"></span> Add new task
                         </button>
-                        <button type="button" className="btn  btn-danger ml-5"
-                            onClick={this.onGenerateData}
-                        > Generate data
-                        </button>
                         {/* Search- Sort */}
                         <Control
                             onSearch={this.onSearch}
+                            onSort={this.onSort}
+                            sortBy={sortBy}
+                            sortValue={sortValue}
                         ></Control>
                         {/* TaskList */}
                         <TaskList tasks={tasks}

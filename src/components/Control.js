@@ -12,7 +12,11 @@ export default class Control extends Component {
                     onSearch={this.props.onSearch}
                 ></Search>
                 {/* Sort */}
-                <Sort></Sort>
+                <Sort
+                    onSort={this.props.onSort}
+                    sortBy={this.props.sortBy}
+                    sortValue={this.props.sortValue}
+                ></Sort>
             </div>
         );
     }
