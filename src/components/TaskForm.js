@@ -37,9 +37,7 @@ export default class TaskForm extends Component {
         }
     }
 
-    onCloseForm = () => {
-        this.props.onCloseForm();
-    }
+    onCloseForm = () => this.props.onCloseForm()
 
     onChange = (event) => {
         var target = event.target;
@@ -53,10 +51,9 @@ export default class TaskForm extends Component {
         });
     }
 
-    onSubmit = (event) => {
+    onSubmit = (event) => { console.log(event);
         event.preventDefault(); //If this method is called, the default action of the event will not be triggered.
         this.props.onSubmit(this.state);
-        // clear and close form
         this.onClear();
         this.onCloseForm();
     }

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Search from './../components/Search';
 import Sort from './../components/Sort';
 
-
 export default class Control extends Component {
     render() {
         return (

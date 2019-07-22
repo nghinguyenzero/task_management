@@ -3,8 +3,7 @@ import './App.css';
 import TaskForm from './components/TaskForm';
 import Control from './components/Control';
 import TaskList from './components/TaskList';
-import demo from './training/demo';
-import {findIndex, filter} from 'lodash';
+import { findIndex, filter } from 'lodash';
 
 export default class App extends Component {
     constructor(props) {
@@ -22,8 +21,8 @@ export default class App extends Component {
             sortValue: 1
         };
     }
-    //  componentWillMount : lifecycle method, and then will call the render() method to get the rendered element.
-    componentWillMount() {
+    
+    componentWillMount() { //componentWillMount : thực thi trước khi component được render() trên cả server side và client side
         if (localStorage && localStorage.getItem('tasks')) {
             var tasks = JSON.parse(localStorage.getItem('tasks'));
             this.setState({
@@ -32,11 +31,11 @@ export default class App extends Component {
         }
     }
 
-    s4 = () => { return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1); }
-    generateId = () => { return this.s4() + this.s4() + '-' + this.s4() + this.s4() + '-' + this.s4() + this.s4(); }
+    s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1)
+    generateId = () =>  this.s4() + this.s4() + '-' + this.s4() + this.s4() + '-' + this.s4() + this.s4()
 
     onToggleForm = () => {
-        if (this.state.isDisplayForm && this.state.taskEditing !== null) { // Đang edit và chọn Add new
+        if (this.state.isDisplayForm && this.state.taskEditing !== null) { // Đang chọn Edit -> Chọn Add new
             this.setState({
                 isDisplayForm: true,
                 taskEditing: null
@@ -123,17 +122,6 @@ export default class App extends Component {
         });
     }
 
-    // findIndex = (id) => {
-    //     var { tasks } = this.state;
-    //     var result = -1;
-    //     tasks.forEach((task, index) => {
-    //         if (task.id === id) {
-    //             result = index;
-    //         }
-    //     });
-    //     return result;
-    // }
-
     onSearch = (keyword) => {
         this.setState({
             keyword: keyword
@@ -150,7 +138,7 @@ export default class App extends Component {
 
     render() {
         var { tasks, isDisplayForm, taskEditing, filterTask, keyword, sortBy, sortValue } = this.state;
-        if (filterTask) { 
+        if (filterTask) {
             if (filterTask.name) {
                 tasks = filter(tasks, (task) => {
                     return task.name.toLowerCase().indexOf(filterTask.name) !== -1;
@@ -171,8 +159,6 @@ export default class App extends Component {
                 return task.name.toLowerCase().indexOf(keyword.toLowerCase()) !== -1;
             })
         }
-
-        console.log(sortBy, '-', sortValue);
 
         if (sortBy === "name") {
             tasks.sort((a, b) => {

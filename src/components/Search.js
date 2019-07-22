@@ -17,9 +17,7 @@ export default class Search extends Component {
         })
     }
 
-    onSearch = () => {
-        this.props.onSearch(this.state.keyword)
-    }
+    onSearch = () => this.props.onSearch(this.state.keyword)
 
     render() {
         var { keyword } = this.state;
