@@ -21,7 +21,7 @@ export default class App extends Component {
             sortValue: 1
         };
     }
-    
+
     componentWillMount() { //componentWillMount : thực thi trước khi component được render() trên cả server side và client side
         if (localStorage && localStorage.getItem('tasks')) {
             var tasks = JSON.parse(localStorage.getItem('tasks'));
@@ -32,7 +32,7 @@ export default class App extends Component {
     }
 
     s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1)
-    generateId = () =>  this.s4() + this.s4() + '-' + this.s4() + this.s4() + '-' + this.s4() + this.s4()
+    generateId = () => this.s4() + this.s4() + '-' + this.s4() + this.s4() + '-' + this.s4() + this.s4()
 
     onToggleForm = () => {
         if (this.state.isDisplayForm && this.state.taskEditing !== null) { // Đang chọn Edit -> Chọn Add new
@@ -185,7 +185,7 @@ export default class App extends Component {
         return (
             <div className="container">
                 <div className="text-center">
-                    <h1>Manage Task</h1>
+                    <h1>MANAGE TASKS</h1>
                 </div>
                 <div className="row ">
                     <div className={isDisplayForm ? 'col-xs-4 col-sm-4 col-md-4 col-lg-4' : ''}>

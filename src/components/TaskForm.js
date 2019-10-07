@@ -11,7 +11,7 @@ export default class TaskForm extends Component {
     }
 
     componentWillMount() { // chỉ dc gọi duy nhất 1 lần khi component dc gắn vào
-        if(this.props.task) {
+        if (this.props.task) {
             this.setState({
                 id: this.props.task.id,
                 name: this.props.task.name,
@@ -19,16 +19,16 @@ export default class TaskForm extends Component {
             })
         }
     }
-    
+
     componentWillReceiveProps(nextProps) {// một phương thức static sẽ chạy khi component nhận được props và đã được khởi tạo
         //is required if you want to update the state values with new props values
-        if(nextProps && nextProps.task) {
+        if (nextProps && nextProps.task) {
             this.setState({
                 id: nextProps.task.id,
                 name: nextProps.task.name,
                 status: nextProps.task.status
             })
-        } else if (!nextProps.task){ // Đang edit chọn vào Add new sẽ xóa Form
+        } else if (!nextProps.task) { // Đang edit chọn vào Add new sẽ xóa Form
             this.setState({
                 id: '',
                 name: '',
@@ -43,35 +43,36 @@ export default class TaskForm extends Component {
         var target = event.target;
         var name = target.name;
         var value = target.value;
-        if(name==='status') {
-            value= target.value === 'true' ? true : false;
+        if (name === 'status') {
+            value = target.value === 'true' ? true : false;
         }
         this.setState({
             [name]: value
         });
     }
 
-    onSubmit = (event) => { console.log(event);
+    onSubmit = (event) => {
+        console.log(event);
         event.preventDefault(); //If this method is called, the default action of the event will not be triggered.
         this.props.onSubmit(this.state);
         this.onClear();
         this.onCloseForm();
     }
 
-    onClear=()=>{
-        this.setState=({
-            name:'',
-            status:false
+    onClear = () => {
+        this.setState = ({
+            name: '',
+            status: false
         })
     }
 
     render() {
-        var  {id} = this.state;
+        var { id } = this.state;
         return (
             <div className="panel panel-warning">
                 <div className="panel-heading ">
                     <h3 className="panel-title">
-                        {id!==''?'Update task':'Add new task'}
+                        {id !== '' ? 'Update task' : 'Add new task'}
                         <span className="fa fa-times-circle text-right"
                             onClick={this.onCloseForm}
                         ></span>
@@ -101,7 +102,7 @@ export default class TaskForm extends Component {
                                     <span className="fa fa-plus mr-5"></span>Save
                                 </button>&nbsp;
                                 <button type="button" className="btn btn-danger"
-                                onClick={this.onClear}
+                                    onClick={this.onClear}
                                 >
                                     <span className="fa fa-close mr-5"></span>Cancel
                                 </button>
